@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module Component where
 
 import StartApp exposing(..)

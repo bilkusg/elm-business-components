@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module NoComponent (update, view, inputs, init,component) where
 
 import Effects exposing (Effects,Never)

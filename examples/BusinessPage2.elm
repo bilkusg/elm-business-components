@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module BusinessPage2 (Model, Action(..), update, view, inputs, init, component) where
 import Business
 import Effects exposing (Effects)
@@ -30,7 +31,7 @@ view address model businessModel =
       [ul []
 
         ( businessModel |> Business.getList model.whichItems |> Array.map (\m->li[] [text m.name]) |> Array.toList )
-        
+
       ]
     ]
 

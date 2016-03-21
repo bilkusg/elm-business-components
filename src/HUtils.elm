@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module HUtils where
 import Effects exposing (Effects)
 import Html exposing (..)

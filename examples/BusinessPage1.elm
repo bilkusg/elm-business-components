@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module BusinessPage1 (PageModel, PageAction(..), update, view, inputs, init, component) where
 import Business
 import Effects exposing (Effects)

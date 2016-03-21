@@ -1,3 +1,4 @@
+{-Lifted from the Elm Architecture Tutorial-}
 module RandomGif where
 
 import Effects exposing (Effects, Never)

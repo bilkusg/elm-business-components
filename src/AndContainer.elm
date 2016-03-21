@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module AndContainer where
 import Effects exposing (Effects)
 import Component exposing (Component)

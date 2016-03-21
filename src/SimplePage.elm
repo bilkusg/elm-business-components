@@ -1,3 +1,4 @@
+{-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module SimplePage  where
 
 import Effects exposing (Effects)
