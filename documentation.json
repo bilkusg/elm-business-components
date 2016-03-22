@@ -1,0 +1,209 @@
+[
+  {
+    "name": "AllContainer",
+    "comment": " Defines containers which can contain one of a number of differently typed component\n\n# containers\n@docs container\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "container",
+        "comment": "Like an andcontainer but shows all components at once",
+        "type": "Component.Component model1 businessModel action1 initializer1 -> Component.Component ( Int, Array.Array ( String, model1 ) ) businessModel (AndContainer.Action model1 action1) (List ( String, initializer1 ))"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "OrContainer",
+    "comment": " Defines containers which can contain one of a number of differently typed component\n\n# containers\n@docs Action, Model, container4, container3, container2\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Action",
+        "comment": " Represents an action which will be passed through to a sub component\n",
+        "args": [
+          "sub1",
+          "sub2",
+          "sub3",
+          "sub4"
+        ],
+        "cases": [
+          [
+            "Sub1",
+            [
+              "sub1"
+            ]
+          ],
+          [
+            "Sub2",
+            [
+              "sub2"
+            ]
+          ],
+          [
+            "Sub3",
+            [
+              "sub3"
+            ]
+          ],
+          [
+            "Sub4",
+            [
+              "sub4"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Model",
+        "comment": "\nRepresents a type of one of the four possible sub models\n",
+        "args": [
+          "m1",
+          "m2",
+          "m3",
+          "m4"
+        ],
+        "cases": [
+          [
+            "Is1",
+            [
+              "m1"
+            ]
+          ],
+          [
+            "Is2",
+            [
+              "m2"
+            ]
+          ],
+          [
+            "Is3",
+            [
+              "m3"
+            ]
+          ],
+          [
+            "Is4",
+            [
+              "m4"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "container2",
+        "comment": "\n A container which can contain any of two types\n",
+        "type": "Component.Component model1 businessModel action1 initializer1 -> Component.Component model2 businessModel action2 initializer2 -> Component.Component (OrContainer.Model model1 model2 Int Int) businessModel (OrContainer.Action action1 action2 Effects.Never Effects.Never) (OrContainer.Model initializer1 initializer2 Effects.Never Effects.Never)"
+      },
+      {
+        "name": "container3",
+        "comment": "\n A container which can contain any of three types\n ",
+        "type": "Component.Component model1 businessModel action1 initializer1 -> Component.Component model2 businessModel action2 initializer2 -> Component.Component model3 businessModel action3 initializer3 -> Component.Component (OrContainer.Model model1 model2 model3 Int) businessModel (OrContainer.Action action1 action2 action3 Effects.Never) (OrContainer.Model initializer1 initializer2 initializer3 Effects.Never)"
+      },
+      {
+        "name": "container4",
+        "comment": "\n A container which can contain any of four types\n ",
+        "type": "Component.Component model1 businessModel action1 initializer1 -> Component.Component model2 businessModel action2 initializer2 -> Component.Component model3 businessModel action3 initializer3 -> Component.Component model4 businessModel action4 initializer4 -> Component.Component (OrContainer.Model model1 model2 model3 model4) businessModel (OrContainer.Action action1 action2 action3 action4) (OrContainer.Model initializer1 initializer2 initializer3 initializer4)"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "AndContainer",
+    "comment": " Defines containers which can contain one of a number of differently typed component\n\n# containers\n@docs Action, container\n",
+    "aliases": [],
+    "types": [
+      {
+        "name": "Action",
+        "comment": "The action allows us to delegate to a specific subcomponent as well as handle additions etc\nThere is more to do here - we need to support removal, reordering etc, and some of that is non-trivial\nbecause of the inputs\n",
+        "args": [
+          "model1",
+          "action1"
+        ],
+        "cases": [
+          [
+            "SubOp",
+            [
+              "Int",
+              "action1"
+            ]
+          ],
+          [
+            "SubOpAll",
+            [
+              "action1"
+            ]
+          ],
+          [
+            "Select",
+            [
+              "Int"
+            ]
+          ],
+          [
+            "Append",
+            [
+              "String",
+              "( model1, Effects.Effects action1 )"
+            ]
+          ]
+        ]
+      }
+    ],
+    "values": [
+      {
+        "name": "container",
+        "comment": "Contains 0 or more tabbed instances of the subcomponent\n",
+        "type": "Component.Component model1 businessModel action1 initializer1 -> Component.Component ( Int, Array.Array ( String, model1 ) ) businessModel (AndContainer.Action model1 action1) (List ( String, initializer1 ))"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "Component",
+    "comment": " This library is the underpinning for the composable component architecture\nwhich builds on startapp.\n\n# Definition\n@docs Component\n\n# Common Helpers\n@docs componentToStartApp, startAppToComponent\n",
+    "aliases": [
+      {
+        "name": "Component",
+        "comment": " Define a composable component with the given helper functions. Note the mutual compability requirements\n    All components in a single tree must share the same businessModel.\n",
+        "args": [
+          "model",
+          "businessModel",
+          "action",
+          "initializer"
+        ],
+        "type": "{ init : initializer -> businessModel -> ( model, businessModel, Effects.Effects action ) , update : action -> model -> businessModel -> ( model, businessModel, Effects.Effects action ) , view : Signal.Address action -> model -> businessModel -> Html.Html , inputs : List (Signal.Signal action) }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "componentToStartApp",
+        "comment": " Given a component and initializers for its model and businessmodel create a StartApp which can be used in the\nnormal way as per the elm architecture\n",
+        "type": "initializer -> businessModel -> Component.Component model businessModel action initializer -> { html : Signal.Signal Html.Html , model : Signal.Signal ( model, businessModel ) , tasks : Signal.Signal (Task.Task Effects.Never ()) }"
+      },
+      {
+        "name": "startAppToComponent",
+        "comment": "Wrap a start app component in one of ours so we can compose it. Intended to ease transition if you already have\nexisting components.",
+        "type": "{ l | init : a -> ( b, c ), inputs : d, update : e -> f -> ( g, h ), view : i -> j -> k } -> { init : a -> m -> ( b, m, c ) , inputs : d , update : e -> f -> n -> ( g, n, h ) , view : i -> j -> o -> k }"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  },
+  {
+    "name": "HUtils",
+    "comment": " A module for helper utilities useful in html production and event handling in the dom\n# events\n@docs onInputFinish\n",
+    "aliases": [],
+    "types": [],
+    "values": [
+      {
+        "name": "onInputFinish",
+        "comment": "\nAllows us to update a string input when we hit return but not on other keys.\nIt also provides a useful template for custom event handlers to bind as attributes of html elements\nCan be used just like onCLick or other htmkl event handlers. The supplied function is passed the text content\nof an input field when return is pressed but not on other keystrokes.\n",
+        "type": "Signal.Address a -> (String -> a) -> Html.Attribute"
+      }
+    ],
+    "generated-with-elm-version": "0.16.0"
+  }
+]

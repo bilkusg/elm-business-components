@@ -1,5 +1,10 @@
 {-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module AndContainer where
+{-| Defines containers which can contain one of a number of differently typed component
+
+# containers
+@docs Action, container
+-}
 import Effects exposing (Effects)
 import Component exposing (Component)
 import Html exposing (..)
@@ -9,14 +14,24 @@ import Array exposing (..)
 import Maybe exposing (..)
 import Signal
 
-(=>) = (,)
 
+
+-- Note that the Append function expects a (model ,action) not an init string
+-- Note also that there is no way of adding in new inputs at this stage, so a new tab with inputs
+-- will have to handle the inputs differently. This is mainly a problem for andcontainers which start empty
+-- and display a container with inputs.
+
+{-|The action allows us to delegate to a specific subcomponent as well as handle additions etc
+There is more to do here - we need to support removal, reordering etc, and some of that is non-trivial
+because of the inputs
+-}
 type Action model1 action1
   =   SubOp Int action1
     | SubOpAll action1
     | Select Int
     | Append String (model1,Effects action1)
-
+{-|Contains 0 or more tabbed instances of the subcomponent
+-}
 container: Component model1 businessModel action1 initializer1
     -> Component (Int,Array.Array (String,model1)) businessModel (Action model1 action1)  (List (String,initializer1))
 container comp1=
@@ -75,7 +90,7 @@ container comp1=
                 newSubModels = Array.push (title,newmodel) submodels
                 newLength = Array.length newSubModels
               in ( ( ( newLength - 1),newSubModels),b, Effects.map (\a->(SubOp (newLength - 1)  a)) neweffects)
-
+      (=>) = (,)
       view saa (nselected,submodels) b =
         let
           addr1 = Signal.forwardTo saa (SubOp nselected)

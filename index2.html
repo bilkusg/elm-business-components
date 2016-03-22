@@ -11267,7 +11267,8 @@ Elm.Component.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $StartApp = Elm.StartApp.make(_elm);
+   $StartApp = Elm.StartApp.make(_elm),
+   $Task = Elm.Task.make(_elm);
    var _op = {};
    var startAppToComponent = function (app) {
       var convertUpdate = F3(function (a,m,b) {
@@ -11867,9 +11868,6 @@ Elm.AndContainer.make = function (_elm) {
    var SubOp = F2(function (a,b) {
       return {ctor: "SubOp",_0: a,_1: b};
    });
-   _op["=>"] = F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   });
    var container = function (comp1) {
       var comp1convert = function (comp1action) {
          return SubOpAll(comp1action);
@@ -11877,6 +11875,9 @@ Elm.AndContainer.make = function (_elm) {
       var inputs = A2($List.map,
       $Signal.map(comp1convert),
       comp1.inputs);
+      _op["=>"] = F2(function (v0,v1) {
+         return {ctor: "_Tuple2",_0: v0,_1: v1};
+      });
       var view = F3(function (saa,_p0,b) {
          var _p1 = _p0;
          var _p6 = _p1._1;
@@ -12044,6 +12045,461 @@ Elm.AndContainer.make = function (_elm) {
                                      ,Select: Select
                                      ,Append: Append
                                      ,container: container};
+};Elm.AllContainer = Elm.AllContainer || {};
+Elm.AllContainer.make = function (_elm) {
+   "use strict";
+   _elm.AllContainer = _elm.AllContainer || {};
+   if (_elm.AllContainer.values) return _elm.AllContainer.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AndContainer = Elm.AndContainer.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Component = Elm.Component.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var container = function (comp1) {
+      var c = $AndContainer.container(comp1);
+      _op["=>"] = F2(function (v0,v1) {
+         return {ctor: "_Tuple2",_0: v0,_1: v1};
+      });
+      var view = F3(function (saa,_p0,b) {
+         var _p1 = _p0;
+         var addr1 = function (n) {
+            return A2($Signal.forwardTo,saa,$AndContainer.SubOp(n));
+         };
+         return A2($Html.div,
+         _U.list([]),
+         _U.list([$Html.text("")
+                 ,A2($Html.div,
+                 _U.list([$Html$Attributes.style(_U.list([A2(_op["=>"],
+                 "display",
+                 "flex")]))]),
+                 $Array.toList(A2($Array.indexedMap,
+                 F2(function (n,_p2) {
+                    var _p3 = _p2;
+                    return A3(comp1.view,addr1(n),_p3._1,b);
+                 }),
+                 _p1._1)))]));
+      });
+      return {init: c.init
+             ,update: c.update
+             ,view: view
+             ,inputs: c.inputs};
+   };
+   return _elm.AllContainer.values = {_op: _op
+                                     ,container: container};
+};Elm.Business = Elm.Business || {};
+Elm.Business.make = function (_elm) {
+   "use strict";
+   _elm.Business = _elm.Business || {};
+   if (_elm.Business.values) return _elm.Business.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var getList = F2(function (whichList,businessModel) {
+      var _p0 = whichList;
+      switch (_p0)
+      {case 1: return businessModel.item1;
+         case 2: return businessModel.item2;
+         case 3: return businessModel.item3;
+         default: return $Array.empty;}
+   });
+   var updateModel = F5(function (whichList,
+   whichItem,
+   newText,
+   newValue,
+   businessModel) {
+      var _p1 = whichList;
+      switch (_p1)
+      {case 1: return _U.update(businessModel,
+           {item1: A3($Array.set,
+           whichItem,
+           {name: newText,value: newValue},
+           businessModel.item1)});
+         case 2: return _U.update(businessModel,
+           {item2: A3($Array.set,
+           whichItem,
+           {name: newText,value: newValue},
+           businessModel.item2)});
+         case 3: return _U.update(businessModel,
+           {item3: A3($Array.set,
+           whichItem,
+           {name: newText,value: newValue},
+           businessModel.item3)});
+         default: return businessModel;}
+   });
+   var startingItems = function (t) {
+      return $Array.fromList(A2($List.map,
+      function (n) {
+         return {name: A2($Basics._op["++"],t,$Basics.toString(n))
+                ,value: n * n};
+      },
+      _U.range(1,10)));
+   };
+   var initialModel = {item1: startingItems("first:")
+                      ,item2: startingItems("second:")
+                      ,item3: startingItems("third:")};
+   var Model = F3(function (a,b,c) {
+      return {item1: a,item2: b,item3: c};
+   });
+   var Item = F2(function (a,b) {    return {name: a,value: b};});
+   return _elm.Business.values = {_op: _op
+                                 ,Item: Item
+                                 ,Model: Model
+                                 ,startingItems: startingItems
+                                 ,initialModel: initialModel
+                                 ,updateModel: updateModel
+                                 ,getList: getList};
+};Elm.HUtils = Elm.HUtils || {};
+Elm.HUtils.make = function (_elm) {
+   "use strict";
+   _elm.HUtils = _elm.HUtils || {};
+   if (_elm.HUtils.values) return _elm.HUtils.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var onInputFinish = F2(function (address,action) {
+      var targetValueAndKey = function () {
+         var targetValue = A2($Json$Decode.at,
+         _U.list(["target","value"]),
+         $Json$Decode.string);
+         var targetKey = A2($Json$Decode._op[":="],
+         "keyCode",
+         $Json$Decode.$int);
+         return A3($Json$Decode.object2,
+         F2(function (v0,v1) {
+            return {ctor: "_Tuple2",_0: v0,_1: v1};
+         }),
+         targetValue,
+         targetKey);
+      }();
+      var decoder = A2($Json$Decode.customDecoder,
+      targetValueAndKey,
+      function (_p0) {
+         var _p1 = _p0;
+         return A2($List.member,
+         _p1._1,
+         _U.list([13])) ? $Result.Ok(_p1._0) : $Result.Err("!");
+      });
+      return A4($Html$Events.onWithOptions,
+      "keyup",
+      {preventDefault: false,stopPropagation: false},
+      decoder,
+      function (val) {
+         return A2($Signal.message,address,action(val));
+      });
+   });
+   return _elm.HUtils.values = {_op: _op
+                               ,onInputFinish: onInputFinish};
+};Elm.BusinessPage1 = Elm.BusinessPage1 || {};
+Elm.BusinessPage1.make = function (_elm) {
+   "use strict";
+   _elm.BusinessPage1 = _elm.BusinessPage1 || {};
+   if (_elm.BusinessPage1.values) return _elm.BusinessPage1.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Business = Elm.Business.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $HUtils = Elm.HUtils.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var inputs = _U.list([]);
+   var update = F3(function (msg,model,businessModel) {
+      var _p0 = msg;
+      switch (_p0.ctor)
+      {case "NoOp": return {ctor: "_Tuple3"
+                           ,_0: model
+                           ,_1: businessModel
+                           ,_2: $Effects.none};
+         case "BusinessAction": return {ctor: "_Tuple3"
+                                       ,_0: model
+                                       ,_1: businessModel
+                                       ,_2: $Effects.none};
+         case "NewTabCalled": return {ctor: "_Tuple3"
+                                     ,_0: model
+                                     ,_1: businessModel
+                                     ,_2: $Effects.none};
+         default: return {ctor: "_Tuple3"
+                         ,_0: model
+                         ,_1: A5($Business.updateModel,
+                         model.whichItems,
+                         _p0._0,
+                         _p0._1,
+                         101,
+                         businessModel)
+                         ,_2: $Effects.none};}
+   });
+   var init = F2(function (_p1,f) {
+      var _p2 = _p1;
+      return {ctor: "_Tuple3"
+             ,_0: {title: _p2._0,whichItems: _p2._1,lastKey: 0}
+             ,_1: f
+             ,_2: $Effects.none};
+   });
+   var UpdateText = F2(function (a,b) {
+      return {ctor: "UpdateText",_0: a,_1: b};
+   });
+   var showOneLine = F3(function (address,itemnumber,item) {
+      return A2($Html.tr,
+      _U.list([]),
+      _U.list([A2($Html.td,
+              _U.list([]),
+              _U.list([A2($Html.input,
+              _U.list([$Html$Attributes.value(item.name)
+                      ,A2($HUtils.onInputFinish,address,UpdateText(itemnumber))]),
+              _U.list([]))]))
+              ,A2($Html.td,
+              _U.list([]),
+              _U.list([$Html.text($Basics.toString(item.value))]))]));
+   });
+   var NewTabCalled = function (a) {
+      return {ctor: "NewTabCalled",_0: a};
+   };
+   var BusinessAction = function (a) {
+      return {ctor: "BusinessAction",_0: a};
+   };
+   var view = F3(function (address,model,businessModel) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.h1,
+              _U.list([]),
+              _U.list([$Html.text(model.title)
+                      ,$Html.text(" ")
+                      ,$Html.text($Basics.toString(model.lastKey))]))
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,
+              address,
+              NewTabCalled("Items3"))]),
+              _U.list([$Html.text("ShowItems3")]))
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,
+              address,
+              BusinessAction(A4($Business.updateModel,
+              model.whichItems,
+              2,
+              "NewText",
+              123)))]),
+              _U.list([$Html.text("Update2")]))
+              ,A2($Html.form,
+              _U.list([]),
+              _U.list([A2($Html.table,
+              _U.list([]),
+              $Array.toList(A2($Array.indexedMap,
+              showOneLine(address),
+              A2($Business.getList,model.whichItems,businessModel))))]))]));
+   });
+   var component = {init: init
+                   ,update: update
+                   ,view: view
+                   ,inputs: inputs};
+   var NoOp = {ctor: "NoOp"};
+   var PageModel = F3(function (a,b,c) {
+      return {title: a,whichItems: b,lastKey: c};
+   });
+   return _elm.BusinessPage1.values = {_op: _op
+                                      ,update: update
+                                      ,view: view
+                                      ,inputs: inputs
+                                      ,init: init
+                                      ,component: component
+                                      ,PageModel: PageModel
+                                      ,NoOp: NoOp
+                                      ,BusinessAction: BusinessAction
+                                      ,NewTabCalled: NewTabCalled
+                                      ,UpdateText: UpdateText};
+};Elm.BusinessPage2 = Elm.BusinessPage2 || {};
+Elm.BusinessPage2.make = function (_elm) {
+   "use strict";
+   _elm.BusinessPage2 = _elm.BusinessPage2 || {};
+   if (_elm.BusinessPage2.values) return _elm.BusinessPage2.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Business = Elm.Business.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var inputs = _U.list([]);
+   var view = F3(function (address,model,businessModel) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.h1,
+              _U.list([]),
+              _U.list([$Html.text(model.title)
+                      ,$Html.text(" ")
+                      ,$Html.text("ReadOnly")]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.ul,
+              _U.list([]),
+              $Array.toList(A2($Array.map,
+              function (m) {
+                 return A2($Html.li,
+                 _U.list([]),
+                 _U.list([$Html.text(m.name)]));
+              },
+              A2($Business.getList,model.whichItems,businessModel))))]))]));
+   });
+   var update = F3(function (msg,model,businessModel) {
+      return {ctor: "_Tuple3"
+             ,_0: model
+             ,_1: businessModel
+             ,_2: $Effects.none};
+   });
+   var init = F2(function (_p0,f) {
+      var _p1 = _p0;
+      return {ctor: "_Tuple3"
+             ,_0: {title: _p1._0,whichItems: _p1._1}
+             ,_1: f
+             ,_2: $Effects.none};
+   });
+   var component = {init: init
+                   ,update: update
+                   ,view: view
+                   ,inputs: inputs};
+   var NoOp = {ctor: "NoOp"};
+   var Model = F2(function (a,b) {
+      return {title: a,whichItems: b};
+   });
+   return _elm.BusinessPage2.values = {_op: _op
+                                      ,update: update
+                                      ,view: view
+                                      ,inputs: inputs
+                                      ,init: init
+                                      ,component: component
+                                      ,Model: Model
+                                      ,NoOp: NoOp};
+};Elm.SimplePage = Elm.SimplePage || {};
+Elm.SimplePage.make = function (_elm) {
+   "use strict";
+   _elm.SimplePage = _elm.SimplePage || {};
+   if (_elm.SimplePage.values) return _elm.SimplePage.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var inputs = _U.list([]);
+   var update = F3(function (msg,model,b) {
+      var _p0 = msg;
+      if (_p0.ctor === "NoOp") {
+            return {ctor: "_Tuple3",_0: model,_1: b,_2: $Effects.none};
+         } else {
+            return {ctor: "_Tuple3"
+                   ,_0: _U.update(model,{displayValue: _p0._0})
+                   ,_1: b
+                   ,_2: $Effects.none};
+         }
+   });
+   var NewValue = function (a) {
+      return {ctor: "NewValue",_0: a};
+   };
+   var view = F3(function (address,model,b) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.button,
+      _U.list([A2($Html$Events.onClick,address,NewValue("Clicked"))]),
+      _U.list([$Html.text(model.displayValue)]))]));
+   });
+   var NoOp = {ctor: "NoOp"};
+   var init = F2(function (s,b) {
+      return {ctor: "_Tuple3"
+             ,_0: {displayValue: s}
+             ,_1: b
+             ,_2: $Effects.none};
+   });
+   var component = {init: init
+                   ,update: update
+                   ,view: view
+                   ,inputs: inputs};
+   var Model = function (a) {    return {displayValue: a};};
+   return _elm.SimplePage.values = {_op: _op
+                                   ,Model: Model
+                                   ,init: init
+                                   ,NoOp: NoOp
+                                   ,NewValue: NewValue
+                                   ,update: update
+                                   ,view: view
+                                   ,inputs: inputs
+                                   ,component: component};
+};Elm.NoComponent = Elm.NoComponent || {};
+Elm.NoComponent.make = function (_elm) {
+   "use strict";
+   _elm.NoComponent = _elm.NoComponent || {};
+   if (_elm.NoComponent.values) return _elm.NoComponent.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Component = Elm.Component.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var inputs = _U.list([]);
+   var view = F3(function (address,model,businessmodel) {
+      return $Html.text("Nonexistent Component - should never see this");
+   });
+   var update = F3(function (msg,model,businessmodel) {
+      return {ctor: "_Tuple3"
+             ,_0: model
+             ,_1: businessmodel
+             ,_2: $Effects.none};
+   });
+   var init = F2(function (n,o) {
+      return {ctor: "_Tuple3",_0: 0,_1: o,_2: $Effects.none};
+   });
+   var component = {init: init
+                   ,update: update
+                   ,view: view
+                   ,inputs: inputs};
+   return _elm.NoComponent.values = {_op: _op
+                                    ,update: update
+                                    ,view: view
+                                    ,inputs: inputs
+                                    ,init: init
+                                    ,component: component};
 };Elm.Native.Http = {};
 Elm.Native.Http.make = function(localRuntime) {
 
@@ -12518,40 +12974,423 @@ Elm.RandomGif.make = function (_elm) {
                                   ,randomUrl: randomUrl
                                   ,decodeUrl: decodeUrl
                                   ,inputs: inputs};
+};Elm.OrContainer = Elm.OrContainer || {};
+Elm.OrContainer.make = function (_elm) {
+   "use strict";
+   _elm.OrContainer = _elm.OrContainer || {};
+   if (_elm.OrContainer.values) return _elm.OrContainer.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Component = Elm.Component.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $NoComponent = Elm.NoComponent.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var Is4 = function (a) {    return {ctor: "Is4",_0: a};};
+   var Is3 = function (a) {    return {ctor: "Is3",_0: a};};
+   var Is2 = function (a) {    return {ctor: "Is2",_0: a};};
+   var Is1 = function (a) {    return {ctor: "Is1",_0: a};};
+   var Sub4 = function (a) {    return {ctor: "Sub4",_0: a};};
+   var Sub3 = function (a) {    return {ctor: "Sub3",_0: a};};
+   var Sub2 = function (a) {    return {ctor: "Sub2",_0: a};};
+   var Sub1 = function (a) {    return {ctor: "Sub1",_0: a};};
+   var container4 = F4(function (comp1,comp2,comp3,comp4) {
+      var comp4convert = function (comp4action) {
+         return Sub4(comp4action);
+      };
+      var comp3convert = function (comp3action) {
+         return Sub3(comp3action);
+      };
+      var comp2convert = function (comp2action) {
+         return Sub2(comp2action);
+      };
+      var comp1convert = function (comp1action) {
+         return Sub1(comp1action);
+      };
+      var inputs = A2($Basics._op["++"],
+      A2($List.map,$Signal.map(comp1convert),comp1.inputs),
+      A2($Basics._op["++"],
+      A2($List.map,$Signal.map(comp2convert),comp2.inputs),
+      A2($Basics._op["++"],
+      A2($List.map,$Signal.map(comp3convert),comp3.inputs),
+      A2($List.map,$Signal.map(comp4convert),comp4.inputs))));
+      var view = F3(function (saa,model,businessModel) {
+         var addr4 = A2($Signal.forwardTo,saa,Sub4);
+         var addr3 = A2($Signal.forwardTo,saa,Sub3);
+         var addr2 = A2($Signal.forwardTo,saa,Sub2);
+         var addr1 = A2($Signal.forwardTo,saa,Sub1);
+         return A2($Html.div,
+         _U.list([]),
+         _U.list([function () {
+            var _p0 = model;
+            switch (_p0.ctor)
+            {case "Is1": return A3(comp1.view,addr1,_p0._0,businessModel);
+               case "Is2": return A3(comp2.view,addr2,_p0._0,businessModel);
+               case "Is3": return A3(comp3.view,addr3,_p0._0,businessModel);
+               default: return A3(comp4.view,addr4,_p0._0,businessModel);}
+         }()]));
+      });
+      var update = F3(function (a,m,b) {
+         var _p1 = a;
+         switch (_p1.ctor)
+         {case "Sub1": var _p2 = m;
+              if (_p2.ctor === "Is1") {
+                    var _p3 = A3(comp1.update,_p1._0,_p2._0,b);
+                    var um = _p3._0;
+                    var ub = _p3._1;
+                    var ufx = _p3._2;
+                    return {ctor: "_Tuple3"
+                           ,_0: Is1(um)
+                           ,_1: ub
+                           ,_2: A2($Effects.map,Sub1,ufx)};
+                 } else {
+                    return {ctor: "_Tuple3",_0: m,_1: b,_2: $Effects.none};
+                 }
+            case "Sub2": var _p4 = m;
+              if (_p4.ctor === "Is2") {
+                    var _p5 = A3(comp2.update,_p1._0,_p4._0,b);
+                    var um = _p5._0;
+                    var ub = _p5._1;
+                    var ufx = _p5._2;
+                    return {ctor: "_Tuple3"
+                           ,_0: Is2(um)
+                           ,_1: ub
+                           ,_2: A2($Effects.map,Sub2,ufx)};
+                 } else {
+                    return {ctor: "_Tuple3",_0: m,_1: b,_2: $Effects.none};
+                 }
+            case "Sub3": var _p6 = m;
+              if (_p6.ctor === "Is3") {
+                    var _p7 = A3(comp3.update,_p1._0,_p6._0,b);
+                    var um = _p7._0;
+                    var ub = _p7._1;
+                    var ufx = _p7._2;
+                    return {ctor: "_Tuple3"
+                           ,_0: Is3(um)
+                           ,_1: ub
+                           ,_2: A2($Effects.map,Sub3,ufx)};
+                 } else {
+                    return {ctor: "_Tuple3",_0: m,_1: b,_2: $Effects.none};
+                 }
+            default: var _p8 = m;
+              if (_p8.ctor === "Is4") {
+                    var _p9 = A3(comp4.update,_p1._0,_p8._0,b);
+                    var um = _p9._0;
+                    var ub = _p9._1;
+                    var ufx = _p9._2;
+                    return {ctor: "_Tuple3"
+                           ,_0: Is4(um)
+                           ,_1: ub
+                           ,_2: A2($Effects.map,Sub4,ufx)};
+                 } else {
+                    return {ctor: "_Tuple3",_0: m,_1: b,_2: $Effects.none};
+                 }}
+      });
+      var init = F2(function (initdata,busdata) {
+         var _p10 = initdata;
+         switch (_p10.ctor)
+         {case "Is1": var _p11 = A2(comp1.init,_p10._0,busdata);
+              var model = _p11._0;
+              var busmodel = _p11._1;
+              var effects = _p11._2;
+              return {ctor: "_Tuple3"
+                     ,_0: Is1(model)
+                     ,_1: busmodel
+                     ,_2: A2($Effects.map,
+                     function (x) {
+                        return Sub1(x);
+                     },
+                     effects)};
+            case "Is2": var _p12 = A2(comp2.init,_p10._0,busdata);
+              var model = _p12._0;
+              var busmodel = _p12._1;
+              var effects = _p12._2;
+              return {ctor: "_Tuple3"
+                     ,_0: Is2(model)
+                     ,_1: busmodel
+                     ,_2: A2($Effects.map,
+                     function (x) {
+                        return Sub2(x);
+                     },
+                     effects)};
+            case "Is3": var _p13 = A2(comp3.init,_p10._0,busdata);
+              var model = _p13._0;
+              var busmodel = _p13._1;
+              var effects = _p13._2;
+              return {ctor: "_Tuple3"
+                     ,_0: Is3(model)
+                     ,_1: busmodel
+                     ,_2: A2($Effects.map,
+                     function (x) {
+                        return Sub3(x);
+                     },
+                     effects)};
+            default: var _p14 = A2(comp4.init,_p10._0,busdata);
+              var model = _p14._0;
+              var busmodel = _p14._1;
+              var effects = _p14._2;
+              return {ctor: "_Tuple3"
+                     ,_0: Is4(model)
+                     ,_1: busmodel
+                     ,_2: A2($Effects.map,
+                     function (x) {
+                        return Sub4(x);
+                     },
+                     effects)};}
+      });
+      return {init: init,update: update,view: view,inputs: inputs};
+   });
+   var container3 = F3(function (m1,m2,m3) {
+      return A4(container4,m1,m2,m3,$NoComponent.component);
+   });
+   var container2 = F2(function (m1,m2) {
+      return A4(container4,
+      m1,
+      m2,
+      $NoComponent.component,
+      $NoComponent.component);
+   });
+   return _elm.OrContainer.values = {_op: _op
+                                    ,Sub1: Sub1
+                                    ,Sub2: Sub2
+                                    ,Sub3: Sub3
+                                    ,Sub4: Sub4
+                                    ,Is1: Is1
+                                    ,Is2: Is2
+                                    ,Is3: Is3
+                                    ,Is4: Is4
+                                    ,container4: container4
+                                    ,container3: container3
+                                    ,container2: container2};
+};Elm.Navigation = Elm.Navigation || {};
+Elm.Navigation.make = function (_elm) {
+   "use strict";
+   _elm.Navigation = _elm.Navigation || {};
+   if (_elm.Navigation.values) return _elm.Navigation.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var inputs = _U.list([]);
+   var update = F3(function (msg,model,businessModel) {
+      return {ctor: "_Tuple3"
+             ,_0: model
+             ,_1: businessModel
+             ,_2: $Effects.none};
+   });
+   var init = F2(function (i,f) {
+      return {ctor: "_Tuple3"
+             ,_0: {currentPage: 0}
+             ,_1: f
+             ,_2: $Effects.none};
+   });
+   var NewPage = F2(function (a,b) {
+      return {ctor: "NewPage",_0: a,_1: b};
+   });
+   var view = F3(function (address,model,businessModel) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("MENU")]))
+              ,A2($Html.ul,
+              _U.list([]),
+              _U.list([A2($Html.li,
+                      _U.list([]),
+                      _U.list([A2($Html.button,
+                      _U.list([A2($Html$Events.onClick,
+                      address,
+                      A2(NewPage,"Items1",1))]),
+                      _U.list([$Html.text("Items1")]))]))
+                      ,A2($Html.li,
+                      _U.list([]),
+                      _U.list([A2($Html.button,
+                      _U.list([A2($Html$Events.onClick,
+                      address,
+                      A2(NewPage,"Items2",2))]),
+                      _U.list([$Html.text("Items2")]))]))
+                      ,A2($Html.li,
+                      _U.list([]),
+                      _U.list([A2($Html.button,
+                      _U.list([A2($Html$Events.onClick,
+                      address,
+                      A2(NewPage,"Items3",3))]),
+                      _U.list([$Html.text("Items3")]))]))
+                      ,A2($Html.li,
+                      _U.list([]),
+                      _U.list([A2($Html.button,
+                      _U.list([A2($Html$Events.onClick,
+                      address,
+                      A2(NewPage,"Items1V2",4))]),
+                      _U.list([$Html.text("Items1ReadOnly")]))]))]))]));
+   });
+   var component = {init: init
+                   ,update: update
+                   ,view: view
+                   ,inputs: inputs};
+   var GotoPage = function (a) {
+      return {ctor: "GotoPage",_0: a};
+   };
+   var NoOp = {ctor: "NoOp"};
+   var PageModel = function (a) {    return {currentPage: a};};
+   return _elm.Navigation.values = {_op: _op
+                                   ,PageModel: PageModel
+                                   ,NoOp: NoOp
+                                   ,GotoPage: GotoPage
+                                   ,NewPage: NewPage
+                                   ,init: init
+                                   ,update: update
+                                   ,view: view
+                                   ,inputs: inputs
+                                   ,component: component};
 };Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
    "use strict";
    _elm.Main = _elm.Main || {};
    if (_elm.Main.values) return _elm.Main.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AllContainer = Elm.AllContainer.make(_elm),
    $AndContainer = Elm.AndContainer.make(_elm),
+   $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Business = Elm.Business.make(_elm),
+   $BusinessPage1 = Elm.BusinessPage1.make(_elm),
+   $BusinessPage2 = Elm.BusinessPage2.make(_elm),
    $Component = Elm.Component.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $RandomGif = Elm.RandomGif.make(_elm),
+   $Navigation = Elm.Navigation.make(_elm),
+   $OrContainer = Elm.OrContainer.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var rgComponent = $Component.startAppToComponent({init: $RandomGif.init
-                                                    ,update: $RandomGif.update
-                                                    ,view: $RandomGif.view
-                                                    ,inputs: $RandomGif.inputs});
-   var andcontainer = $AndContainer.container(rgComponent);
+   var tAppendFrom = F2(function (title,_p0) {
+      var _p1 = _p0;
+      return A2($AndContainer.Append,
+      title,
+      {ctor: "_Tuple2",_0: _p1._0,_1: _p1._2});
+   });
+   var orcontainer = A3($OrContainer.container3,
+   $Navigation.component,
+   $BusinessPage1.component,
+   $BusinessPage2.component);
+   var container1 = $AllContainer.container(orcontainer);
+   var topLevelComponent = function () {
+      var inputs = container1.inputs;
+      var view = F3(function (a,tabmodel,businessModel) {
+         return A2($Html.div,
+         _U.list([]),
+         _U.list([A2($Html.div,
+         _U.list([]),
+         _U.list([A2($Html.div,
+                 _U.list([]),
+                 $Array.toList(A2($Array.map,
+                 function (m) {
+                    return $Html.text(A2($Basics._op["++"],
+                    m.name,
+                    A2($Basics._op["++"],
+                    " ",
+                    A2($Basics._op["++"],$Basics.toString(m.value)," "))));
+                 },
+                 A2($Business.getList,1,businessModel))))
+                 ,A3(container1.view,a,tabmodel,businessModel)]))]));
+      });
+      var update = F3(function (action,tabmodel,businessmodel) {
+         var _p2 = function () {
+            var _p3 = action;
+            if (_p3.ctor === "SubOp" && _p3._1.ctor === "Sub1" && _p3._1._0.ctor === "NewPage")
+            {
+                  var _p5 = _p3._1._0._0;
+                  var _p4 = _p3._1._0._1;
+                  switch (_p4)
+                  {case 1: return {ctor: "_Tuple3"
+                                  ,_0: A2(tAppendFrom,
+                                  _p5,
+                                  A2(orcontainer.init,
+                                  $OrContainer.Is2({ctor: "_Tuple2",_0: "Items1",_1: 1}),
+                                  businessmodel))
+                                  ,_1: tabmodel
+                                  ,_2: businessmodel};
+                     case 2: return {ctor: "_Tuple3"
+                                    ,_0: A2(tAppendFrom,
+                                    _p5,
+                                    A2(orcontainer.init,
+                                    $OrContainer.Is2({ctor: "_Tuple2",_0: "Items2",_1: 2}),
+                                    businessmodel))
+                                    ,_1: tabmodel
+                                    ,_2: businessmodel};
+                     case 3: return {ctor: "_Tuple3"
+                                    ,_0: A2(tAppendFrom,
+                                    _p5,
+                                    A2(orcontainer.init,
+                                    $OrContainer.Is2({ctor: "_Tuple2",_0: "Items3",_1: 3}),
+                                    businessmodel))
+                                    ,_1: tabmodel
+                                    ,_2: businessmodel};
+                     case 4: return {ctor: "_Tuple3"
+                                    ,_0: A2(tAppendFrom,
+                                    _p5,
+                                    A2(orcontainer.init,
+                                    $OrContainer.Is3({ctor: "_Tuple2",_0: "Items1P2",_1: 1}),
+                                    businessmodel))
+                                    ,_1: tabmodel
+                                    ,_2: businessmodel};
+                     default: return {ctor: "_Tuple3"
+                                     ,_0: action
+                                     ,_1: tabmodel
+                                     ,_2: businessmodel};}
+               } else {
+                  return {ctor: "_Tuple3"
+                         ,_0: action
+                         ,_1: tabmodel
+                         ,_2: businessmodel};
+               }
+         }();
+         var newaction = _p2._0;
+         var newtabmodel = _p2._1;
+         var newbusinessmodel = _p2._2;
+         return A3(container1.update,
+         newaction,
+         newtabmodel,
+         newbusinessmodel);
+      });
+      var init = F2(function (ival,bval) {
+         var _p6 = A2(container1.init,ival,bval);
+         var m = _p6._0;
+         var b = _p6._1;
+         var e = _p6._2;
+         return {ctor: "_Tuple3",_0: m,_1: bval,_2: e};
+      });
+      return {init: init,update: update,view: view,inputs: inputs};
+   }();
    var app = A3($Component.componentToStartApp,
-   _U.list([{ctor: "_Tuple2",_0: "Cats",_1: "Funny cats"}
-           ,{ctor: "_Tuple2",_0: "Dogs",_1: "Funny dogs"}]),
-   {ctor: "_Tuple0"},
-   andcontainer);
+   _U.list([{ctor: "_Tuple2"
+            ,_0: "Menu"
+            ,_1: $OrContainer.Is1("")}]),
+   $Business.initialModel,
+   topLevelComponent);
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);
    return _elm.Main.values = {_op: _op
-                             ,rgComponent: rgComponent
-                             ,andcontainer: andcontainer
+                             ,orcontainer: orcontainer
+                             ,container1: container1
+                             ,tAppendFrom: tAppendFrom
+                             ,topLevelComponent: topLevelComponent
                              ,app: app
                              ,main: main};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>

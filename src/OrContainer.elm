@@ -1,7 +1,11 @@
 {-Copyright 2016 Greenwheel Technology Ltd and Gary Bilkus-}
 module OrContainer where
+{-| Defines containers which can contain one of a number of differently typed component
 
-import Effects exposing (Effects)
+# containers
+@docs Action, Model, container4, container3, container2
+-}
+import Effects exposing (Effects,Never)
 import Component exposing (Component)
 import NoComponent
 import Html exposing (..)
@@ -11,21 +15,26 @@ import Array exposing (..)
 import Maybe exposing (..)
 import Signal
 
-(=>) = (,)
 
+{-| Represents an action which will be passed through to a sub component
+-}
 type Action sub1 sub2 sub3 sub4
   =   Sub1 sub1
     | Sub2 sub2
     | Sub3 sub3
     | Sub4 sub4
-
+{-|
+Represents a type of one of the four possible sub models
+-}
 type Model m1 m2 m3 m4
   = Is1 m1
   | Is2 m2
   | Is3 m3
   | Is4 m4
 
-
+{-|
+ A container which can contain any of four types
+ -}
 container4: Component model1 businessModel action1 initializer1
   -> Component  model2 businessModel action2 initializer2
   -> Component  model3 businessModel action3 initializer3
@@ -122,5 +131,22 @@ container4 comp1 comp2 comp3 comp4 =
     in
        {init=init, update=update,view=view,inputs=inputs}
 
+{-|
+ A container which can contain any of three types
+ -}
+container3: Component model1 businessModel action1 initializer1
+   -> Component  model2 businessModel action2 initializer2
+   -> Component  model3 businessModel action3 initializer3
+   -> Component (Model model1 model2 model3 Int) businessModel
+                 (Action action1 action2 action3 Never)
+                 (Model initializer1 initializer2 initializer3 Never)
 container3 m1 m2 m3 = container4 m1 m2 m3 NoComponent.component
+{-|
+ A container which can contain any of two types
+-}
+container2: Component model1 businessModel action1 initializer1
+   -> Component  model2 businessModel action2 initializer2
+   -> Component (Model model1 model2 Int Int) businessModel
+                 (Action action1 action2 Never Never)
+                 (Model initializer1 initializer2 Never Never)
 container2 m1 m2 = container4 m1 m2 NoComponent.component NoComponent.component
